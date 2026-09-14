@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全栈 AI 开发者 · 系统学习路线</title>
+<style>
+:root{
+  --bg:#0f1116;
+  --panel:#171a21;
+  --panel2:#1d212b;
+  --line:#2a2f3a;
+  --text:#e6e9f0;
+  --muted:#9aa3b2;
+  --brand:#6c8cff;
+  --brand-soft:#1b2642;
+  --green:#37d67a;
+  --amber:#f5b04c;
+  --red:#ff5c6c;
+  --cyan:#38d2d8;
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;font-size:15px;
+}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+
+/* ===== 顶部 ===== */
+header.hero{
+  padding:12px 0 8px;
+  border-bottom:1px solid var(--line);
+}
+.hero .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tag{font-size:12px;padding:3px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.tag.feature{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
+h1{font-size:30px;font-weight:800;letter-spacing:.5px}
+.sub{color:var(--muted);margin-top:6px;font-size:15px}
+
+/* ===== 学习目标条 ===== */
+.stat-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0;
+}
+@media(max-width:640px){.stat-bar{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+.stat b{display:block;font-size:22px;color:var(--brand);font-weight:800}
+.stat span{font-size:13px;color:var(--muted)}
+
+/* ===== 目录导航 ===== */
+nav.toc{
+  position:sticky;top:0;z-index:20;background:rgba(15,17,22,.92);
+  backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:var(--radius);
+  padding:10px 14px;margin:18px 0 8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+}
+nav.toc .toc-label{font-size:12px;color:var(--muted);margin-right:4px}
+nav.toc a{font-size:13px;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+nav.toc a:hover{color:var(--brand);border-color:var(--brand);text-decoration:none}
+nav.toc a.done{color:var(--green);border-color:inherit}
+
+/* ===== 阶段卡片 ===== */
+section.phase{margin-top:34px}
+.phase-head{
+  display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 20px;position:sticky;top:64px;z-index:10;
+}
+.phase-num{font-size:13px;font-weight:800;color:var(--brand);border:1px solid var(--brand);border-radius:999px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;background:var(--brand-soft)}
+.phase-title, .phase-title-alt{flex:1;min-width:0}
+.phase-title h2{font-size:19px;font-weight:700}
+.phase-title .goal{font-size:13px;color:var(--muted);margin-top:2px}
+.phase-duration{font-size:12px;color:var(--muted);background:var(--panel2);border:1px solid var(--line);padding:4px 12px;border-radius:999px;white-space:nowrap}
+.chev{color:var(--muted);font-size:16px;transition:transform .2s}
+section.phase.open .chev{transform:rotate(180deg)}
+.phase-body{display:none;margin-top:12px;padding:4px}
+section.phase.open .phase-body{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== 进度 ===== */
+.phase-progress{
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:0 6px;
+}
+.phase-progress .track{flex:1;height:6px;background:var(--panel2);border-radius:999px;overflow:hidden}
+.phase-progress .fill{height:100%;width:0;background:var(--brand);border-radius:999px;transition:width .3s}
+.phase-progress .pct{font-size:12px;color:var(--muted);min-width:38px;text-align:right}
+
+/* ===== 内容块 ===== */
+.block{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px}
+.block h3{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+h3 .n{color:var(--brand);font-size:13px;border:1px solid var(--brand);border-radius:6px;padding:0 7px}
+.block p{color:var(--muted);font-size:14px;margin-bottom:8px}
+.block ul{list-style:none;margin:6px 0 2px}
+.block li{position:relative;padding:4px 0 4px 24px;font-size:14px;color:var(--text)}
+.block li:before{content:"";position:absolute;left:6px;top:13px;width:7px;height:7px;border-radius:2px;background:var(--brand)}
+.block li.sub:before{width:5px;height:5px;background:var(--muted)}
+.block li.sub{color:var(--muted)}
+.block li.done{color:var(--muted);text-decoration:line-through}
+
+.task{
+  background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:10px 0;
+}
+.task .lbl{font-size:12px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:4px}
+.task p{color:var(--text);font-size:14px;margin:0}
+
+/* 学习清单（可勾选） */
+.learn-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.learn-item{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color .15s}
+.learn-item:hover{border-color:var(--brand)}
+.learn-item input{margin-top:4px;accent-color:var(--brand);width:16px;height:16px;flex:0 0 auto;cursor:pointer}
+.learn-item .li-main{flex:1;min-width:0}
+.learn-item .li-title{font-size:14px;font-weight:600}
+.learn-item .li-desc{font-size:13px;color:var(--muted);margin-top:2px}
+.learn-item .li-links{font-size:12px;margin-top:6px;color:var(--brand)}
+.learn-item .li-links a{margin-right:10px}
+.learn-item.checked{border-color:var(--green)}
+.learn-item.checked .li-title{color:var(--muted);text-decoration:line-through}
+.learn-item .li-tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;margin-left:8px;vertical-align:middle;border:1px solid var(--line);color:var(--muted)}
+.learn-item .li-tag.quick{color:var(--green);border-color:var(--green)}
+.learn-item .li-tag.key{color:var(--amber);border-color:var(--amber)}
+.learn-item .li-tag.hot{color:var(--red);border-color:var(--red)}
+
+/* 技能标签 */
+.skill-pills{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 6px}
+.pill{font-size:12px;padding:4px 12px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted)}
+.pill.on{color:var(--brand);border-color:var(--brand);background:var(--brand-soft)}
+.pill.hot{color:var(--red);border-color:var(--red);background:rgba(255,92,108,.08)}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+th,td{text-align:left;padding:10px 12px;border:1px solid var(--line)}
+th{background:var(--panel2);color:var(--text);font-weight:600}
+td{color:var(--text)}
+td.mut{color:var(--muted)}
+
+/* 部署步骤 */
+.deploy-steps{counter-reset:dp;display:flex;flex-direction:column;gap:12px}
+.dp{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;position:relative}
+.dp:before{counter-increment:dp;content:counter(dp);position:absolute;left:-12px;top:16px;width:26px;height:26px;background:var(--brand);color:#fff;border-radius:999px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.dp h4{font-size:15px;margin-bottom:8px}
+.dp p{margin-bottom:6px}
+.dp p.hint{color:var(--muted);font-size:13px}
+code{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-family:Consolas,monospace;font-size:13px;color:var(--cyan)}
+pre{background:#0b0d12;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:10px 0;font-family:Consolas,monospace;font-size:13px;color:#cfe0e8;line-height:1.6}
+
+/* 部署方案卡 */
+.host-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px}
+.host{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.host.recommend{border-color:var(--brand)}
+.host h4{font-size:15px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.host .badge{font-size:11px;color:var(--brand);background:var(--brand-soft);border:1px solid var(--brand);padding:1px 8px;border-radius:999px}
+.host p{color:var(--muted);font-size:13px}
+.host .limits{font-size:12px;color:var(--amber);margin-top:8px}
+
+blockquote{
+  border-left:3px solid var(--brand);background:var(--brand-soft);padding:12px 16px;
+  border-radius:0 10px 10px 0;font-size:14px;margin:12px 0;
+}
+.note{font-size:13px;color:var(--muted)}
+
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px;text-align:center}
+.progress-top{
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 18px;margin:18px 0;
+}
+.progress-top b{color:var(--brand)}
+.reset{background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:6px 16px;cursor:pointer;font-size:13px}
+.reset:hover{border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="hero">
+  <h1>全栈 AI 开发者 · 系统学习路线</h1>
+  <p class="sub">从<span style="color:var(--text)">Python / MySQL / PyTorch</span> 基础出发，一路通向能独立交付「AI 业务应用」的全栈工程师 · 8 个阶段 · 含学习顺序 / 实战任务 / 视频指引 / 部署上线</p>
+  <div class="tags">
+    <span class="tag feature">给已有基础的你</span>
+    <span class="tag">前端 · 后端 · 数据库</span>
+    <span class="tag">CV · NLP · 语音 · 多模态</span>
+    <span class="tag">大模型 · RAG · Agent</span>
+    <span class="tag">Docker · 云端部署</span>
+  </div>
+</header>
+
+<div class="progress-top">
+  <div>总进度：<b id="overall-pct">0%</b>（<span id="overall-count">0/0</span> 项）</div>
+  <button class="reset" onclick="resetAll()">重置进度</button>
+</div>
+
+<div class="stat-bar" style="grid-template-columns:none;grid-template-rows:auto">
+  <div style="grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+    <div class="stat"><b>8</b><span>学习阶段</span></div>
+    <div class="stat"><b>50+</b><span>核心知识点</span></div>
+    <div class="stat"><b>12+</b><span>实战项目</span></div>
+    <div class="stat"><b>100%</b><span>免费工具 / 免费部署</span></div>
+  </div>
+</div>
+
+<div class="block" style="margin-top:22px">
+  <h3>📖 怎么用这份路线图</h3>
+  <ul>
+    <li><b>按顺序推进</b>：阶段 1 → 8 有先后依赖，不要跳着学；标 <b>快速过★</b> 的是你已会的内容，过一遍查漏即可。</li>
+    <li><b>以战代练</b>：每个阶段末尾的实战任务必须动手做完才算过关，只看不练等于没学。</li>
+    <li><b>勾选记进度</b>：学会一项就勾一项，进度自动保存在<b>本设备浏览器</b>中（换设备需重新勾选，不同设备进度不同步）。</li>
+    <li><b>视频指引</b>：所有视频链接都是 B 站搜索链接（永不失效），优先选播放量高、近两年更新的教程。</li>
+    <li><b>节奏建议</b>：按大学生课余节奏约 8–10 个月走完；假期可加速，平时每天 1–2 小时即可，贵在连续。</li>
+  </ul>
+</div>
+
+<nav class="toc" id="toc">
+  <span class="toc-label">目录：</span>
+  <a href="#s1">① 基础定地基</a>
+  <a href="#s2">② 前端</a>
+  <a href="#s3">③ 后端</a>
+  <a href="#s4">④ 数据库</a>
+  <a href="#s5">⑤ 机器学习与深度学习</a>
+  <a href="#s6">⑥ 大模型应用开发</a>
+  <a href="#s7">⑦ 工程化与部署</a>
+  <a href="#s8">⑧ 综合实战</a>
+  <a href="#deploy">🚀 免费部署指南</a>
+</nav>
+
+<!-- ================= 阶段 1 ================= -->
+<section class="phase" id="s1" data-phase="1">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">1</span>
+    <div class="phase-title">
+      <h2>编程与软件工程基础</h2>
+      <div class="goal">给已有底子做「工程化补全」，把「会写代码」升级为「能开发软件」</div>
+    </div>
+    <span class="phase-duration">约 3–4 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="1"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">1.1</span> 为什么还要学「软件工程」层</h3>
+      <p>你已经会 Python / 数据结构 / 网络 / PyTorch，这些是「算法与计算」能力。但做正规软件还需要「工程能力」：用 Git 管理版本、用虚拟环境隔离依赖、写单元测试、学会调试与阅读他人代码。这是从「写脚本」到「做项目」的分水岭。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">1.2</span> 定点补强清单（可勾选，勾完自动记进度）</h3>
+      <div class="learn-list" data-phase-list="1">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Git 与 GitHub 工作流</span><span class="li-desc">init / add / commit / branch / merge / push；搞懂 Remote 协作</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=遇见狂神说%20Git" target="_blank">👨‍💻 B站搜索：遇见狂神说 Git</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Linux 与命令行基础<span class="li-tag key">必学</span></span><span class="li-desc">常用命令（cd/ls/mkdir/grep/chmod）、SSH 远程登录、文件权限——阶段 7 部署的必备前置</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=Linux%20%E5%85%A5%E9%97%A8%20%E6%95%99%E7%A8%8B" target="_blank">👨‍💻 B站搜索：Linux 入门教程</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Python 虚拟环境与依赖管理</span><span class="li-desc">venv / pip / requirements.txt 或 conda，让项目可移植</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">调试技巧与错误处理</span><span class="li-desc">pdb 调试、读懂 traceback、try/except 的规范用法</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">单元测试入门</span><span class="li-desc">pytest 基本用法，给自己写的函数写断言</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">代码规范与文档</span><span class="li-desc">PEP8、类型注解 (typing)、读懂 docstring 习惯</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">HTTP 与 API 基础回顾<span class="li-tag quick">快速过</span></span><span class="li-desc">GET/POST、状态码、JSON；你网络功底强，可跳过</span></span></label>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">1.3</span> 阶段实战任务（必须完成才算过关）</h3>
+      <div class="task"><span class="lbl">任务 1 · 版本化你的旧项目</span><p>挑一个你以前写过的 Python 或 PyTorch 项目，用 Git 初始化、分几次 commit、开一个分支加新功能再 merge 回主干，最后推到 GitHub。</p></div>
+      <div class="task"><span class="lbl">任务 2 · 写一个带测试的小工具</span><p>写一个「JSON 配置读取 + 数据处理」的命令行小工具，用 pytest 写 5 个以上断言，验证输入输出。</p></div>
+    </div>
+    <blockquote>✅ 阶段目标：能用 Git 管理代码，项目能装到任何一台机器上跑起来。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 2 前端 ================= -->
+<section class="phase" id="s2" data-phase="2">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">2</span>
+    <div class="phase-title">
+      <h2>前端 Web 开发</h2>
+      <div class="goal">你最缺的一层：学会把 AI / 业务能力做成好看好用的用户界面</div>
+    </div>
+    <span class="phase-duration">约 4–5 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="2"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">2.1</span> 前端全景与选型</h3>
+      <p>主流前端框架三选一：<b>React</b>（生态最广，大厂与开源项目主力）、<b>Vue 3</b>（上手友好、中文生态好、国内大厂占比高）、Angular（强约束，较少）。对从后端转前端的你，<b>先学 Vue 3 最快</b>，会 Vue 后再转 React 很顺。</p>
+      <div class="skill-pills">
+        <span class="pill on">Vue 3</span><span class="pill on">React</span><span class="pill on">TypeScript</span>
+        <span class="pill">Vite</span><span class="pill">Tailwind CSS</span><span class="pill">Next.js/Nuxt</span>
+        <span class="pill on">Pinia/Redux</span><span class="pill on">Axios</span><span class="pill on">SSE</span>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">2.2</span> 学习清单</h3>
+      <div class="learn-list" data-phase-list="2">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">HTML + CSS 基础<span class="li-tag quick">快速过</span></span><span class="li-desc">语义标签、Flex/Grid 布局；做到能看懂会写页面</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=%E5%B0%9A%E7%A1%85%E8%B0%B7%20HTML%20CSS" target="_blank">👨‍💻 B站搜索：尚硅谷 HTML CSS</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">JavaScript 核心</span><span class="li-desc">ES6+（async/await、解构、模块）、DOM、fetch 请求</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=%E9%BB%91%E9%A9%AC%E7%A8%8B%E5%BA%8F%E5%91%98%20JavaScript%20%E5%9F%BA%E7%A1%80" target="_blank">👨‍💻 B站搜索：黑马程序员 JavaScript</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">TypeScript 入门</span><span class="li-desc">类型标注、接口、泛型基础；如今前端写 TS 是常态</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Vue 3 框架<span class="li-tag key">必学</span></span><span class="li-desc">组合式 API、模板语法、状态管理（Pinia）、路由（Vue Router）</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=%E5%B0%9A%E7%A1%85%E8%B0%B7%20Vue3" target="_blank">👨‍💻 B站搜索：尚硅谷 Vue3</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">React（会 Vue 后转）</span><span class="li-desc">hooks、组件化、项目脚手架；广度提升再学</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=%E9%BB%91%E9%A9%AC%E7%A8%8B%E5%BA%8F%E5%91%98%20React%E5%85%A5%E9%97%A8" target="_blank">👨‍💻 B站搜索：黑马程序员 React入门</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Axios 与接口联调</span><span class="li-desc">拦截器、get/post、token 携带；前端和/后端对接的必经路</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">SSE 流式接收<span class="li-tag hot">AI 必用</span></span><span class="li-desc">EventSource 接收大模型打字机效果</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">组件库与样式</span><span class="li-desc">Element Plus / Ant Design，Tailwind CSS 快速布局，别再手写样式</span></span></label>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">2.3</span> 实战任务</h3>
+      <div class="task"><span class="lbl">任务 1 · 静态页面</span><p>用 HTML/CSS/JS 做一个漂亮的个人作品集页面，适配手机。</p></div>
+      <div class="task"><span class="lbl">任务 2 · Vue 组件化项目</span><p>用 Vue 3 + TypeScript + Vite 做一个「记账本」：增删改查、本地存储、图表。<b>这是你第一个完整前端项目。</b></p></div>
+      <div class="task"><span class="lbl">任务 3 · 对接真实数据</span><p>用 Axios 请求一个免费 API 并渲染列表（如天气 / 公开接口），学会加载态和错误处理。</p></div>
+    </div>
+    <blockquote>✅ 阶段目标：能独立从零搭一个 Vue/React + TS 前端项目，并接住后端 / AI 的接口。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 3 后端 ================= -->
+<section class="phase" id="s3" data-phase="3">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">3</span>
+    <div class="phase-title">
+      <h2>后端与 API 服务</h2>
+      <div class="goal">把业务和 AI 能力封装成可供前端调用的高可用接口（你已会 Python，顺水推舟）</div>
+    </div>
+    <span class="phase-duration">约 4–5 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="3"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">3.1</span> 后端技术选型</h3>
+      <div class="skill-pills">
+        <span class="pill on">Python FastAPI</span><span class="pill on">RESTful API</span>
+        <span class="pill on">SSE/WebSocket</span><span class="pill">gRPC</span>
+        <span class="pill">Java Spring Boot</span><span class="pill">Go Gin</span>
+        <span class="pill on">JWT 认证</span><span class="pill on">OpenAI 接口规范</span>
+      </div>
+      <p>首选 <b>FastAPI</b>：异步高性能、自动生成接口文档、AI 推理服务行业标配，你会 Python 上手极快。另需了解 <b>Java Spring Boot</b>（读懂大厂代码）、<b>gRPC</b>（内部高性能调用）。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">3.2</span> 学习清单</h3>
+      <div class="learn-list" data-phase-list="3">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">FastAPI 核心<span class="li-tag key">必学</span></span><span class="li-desc">路由、请求/响应模型（Pydantic）、依赖注入、自动文档 /docs</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=FastAPI%20%E6%95%99%E7%A8%8B" target="_blank">👨‍💻 B站搜索：FastAPI 教程</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">RESTful 接口设计</span><span class="li-desc">资源路径、HTTP 方法、状态码、分页</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">JWT 认证与权限</span><span class="li-desc">登录签发 token、中间件校验、角色权限</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">SSE / WebSocket 流式输出<span class="li-tag hot">AI 必用</span></span><span class="li-desc">大模型打字机输出、实时推送</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">OpenAI 兼容接口规范<span class="li-tag hot">行业标准</span></span><span class="li-desc">封装一个可切换任意大模型的服务层</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">异步编程 (asyncio)</span><span class="li-desc">async/await、事件循环，AI 服务高并发的基础</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">CORS 与部署配置</span><span class="li-desc">解决前端跨域，用 uvicorn 起服务</span></span></label>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">3.3</span> 实战任务</h3>
+      <div class="task"><span class="lbl">任务 1 · 图书管理 API</span><p>用 FastAPI 实现一个带 JWT 登录、增删改查、分页的图书接口。</p></div>
+      <div class="task"><span class="lbl">任务 2 · AI 代理接口</span><p>封装一个 OpenAI 兼容的聊天接口，支持流式 SSE 输出，前端能收到打字机效果。这为你后面大模型阶段铺路。</p></div>
+    </div>
+    <blockquote>✅ 阶段目标：能独立写一个带认证的高性能 REST/流式后端，前端能联调。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 4 数据库 ================= -->
+<section class="phase" id="s4" data-phase="4">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">4</span>
+    <div class="phase-title">
+      <h2>数据库与存储</h2>
+      <div class="goal">把你已精通的 MySQL 加固为「能扛生产」的数据工程师能力，并补齐 AI 时代的存储</div>
+    </div>
+    <span class="phase-duration">约 3–4 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="4"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">4.1</span> 数据库选型全景</h3>
+      <div class="skill-pills">
+        <span class="pill on">MySQL</span><span class="pill on">PostgreSQL</span>
+        <span class="pill on">Redis</span><span class="pill">MongoDB</span>
+        <span class="pill hot">向量数据库</span><span class="pill">SQL 优化</span><span class="pill on">事务与索引</span>
+      </div>
+      <p>你 MySQL 已是强项（SQL/事务/索引/执行计划），这阶段重点：①补 <b>PostgreSQL</b>（JSON、函数更强大，AI 项目常用）；②补 <b>Redis</b>（缓存、分布式锁）；③提前布局 <b>向量数据库</b>（大模型 RAG 检索底座）。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">4.2</span> 学习清单<span class="note" style="font-weight:normal;color:var(--muted)">　（★是你已会的，可快速过或跳过）</span></h3>
+      <div class="learn-list" data-phase-list="4">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">MySQL 深度加固<span class="li-tag quick">快速过★</span></span><span class="li-desc">索引失效场景、执行计划 EXPLAIN、慢查询优化 — 你用查漏补缺式过一遍</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">PostgreSQL 基础</span><span class="li-desc">与 MySQL 差异、JSONB、窗口函数、扩展</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Redis 实战<span class="li-tag key">必学</span></span><span class="li-desc">常用数据类型、缓存穿透/击穿/雪崩、分布式锁、发布订阅</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=%E9%81%87%E8%A7%81%E7%8B%82%E7%A5%9E%E8%AF%B4%20Redis" target="_blank">👨‍💻 B站搜索：遇见狂神说 Redis</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">MongoDB 入门<span class="li-tag quick">了解</span></span><span class="li-desc">文档模型、灵活 schema，适合日志等非结构化数据</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">向量数据库<span class="li-tag hot">AI 必学</span></span><span class="li-desc">Embedding 概念、Chroma（轻量入门）/ Milvus（生产级）/ PGVector</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">数据库设计规范</span><span class="li-desc">三范式与反范式权衡、字段设计、软删除 vs 硬删除</span></span></label>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">4.3</span> 实战任务</h3>
+      <div class="task"><span class="lbl">任务 1 · 用户系统表设计</span><p>为「登录 + 商品 + 订单」设计一套满足三范式、含合理索引与事务的表结构，写清建表 SQL 和查询的 EXPLAIN 分析。</p></div>
+      <div class="task"><span class="lbl">任务 2 · Redis 缓存实战</span><p>给后端加 Redis 缓存，实现「热点数据缓存 + 失效更新」，并演示防缓存穿透（布隆或空值）。</p></div>
+      <div class="task"><span class="lbl">任务 3 · 第一个向量库</span><p>用 Chroma 存几段文本的 embedding，做一次语义相似度检索。这将直接衔接第 6 阶段 RAG。</p></div>
+    </div>
+    <blockquote>✅ 阶段目标：能把数据存得对、查得快，并拥有 AI 时代的向量检索能力。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 5 机器学习与深度学习 ================= -->
+<section class="phase" id="s5" data-phase="5">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">5</span>
+    <div class="phase-title">
+      <h2>机器学习与深度学习基础</h2>
+      <div class="goal">你 PyTorch 已精通原理，这里补「模型应用 + 四大能力领域」的通路</div>
+    </div>
+    <span class="phase-duration">约 6–8 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="5"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">5.1</span> 你的优势与定位</h3>
+      <p>你精通 PyTorch（Tensor/CNN/RNN/Transformer）和数据结构，这部分不必从零。你的定位是<b>「应用开发者」</b>：核心不是手写模型，而是<b>加载预训练模型 → 推理 → 二次开发</b>，让它开箱即用地解决业务问题。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">5.2</span> 机器学习基础（查漏 + 补应用认知）</h3>
+      <div class="learn-list" data-phase-list="5">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">ML 核心概念<span class="li-tag quick">快速过★</span></span><span class="li-desc">监督/无监督/强化、过拟合、评估指标(准确率/召回/F1)、特征工程</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Scikit-learn 实践</span><span class="li-desc">用 sklearn 跑分类/回归/聚类，调参、交叉验证、评估</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">深度学习框架选型<span class="li-tag key">必学</span></span><span class="li-desc">PyTorch（已会）+ 理解 PaddlePaddle / TensorFlow / ONNX Runtime 在工程中的位置</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">模型生命周期</span><span class="li-desc">数据划分、训练/验证/测试、微调 Fine-tuning、部署推理</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Embedding 嵌入<span class="li-tag hot">AI 必学</span></span><span class="li-desc">词/向量嵌入，是 RAG 语义检索的基础</span></span></label>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">5.3</span> 四大 AI 能力领域（按「开箱即用」路线学）</h3>
+      <div class="skill-pills">
+        <span class="pill on">计算机视觉 CV</span><span class="pill on">NLP 自然语言</span>
+        <span class="pill">语音 ASR/TTS</span><span class="pill hot">多模态</span>
+      </div>
+      <table>
+        <tr><th>方向</th><th>基础能力</th><th>开源方案</th><th>商用 API</th></tr>
+        <tr><td class="mut">CV</td><td>分类 / 检测 / 分割 / OCR / 人脸</td><td>Ultralytics YOLO、PaddleOCR、MMDetection、OpenCV</td><td>百度 / 阿里云视觉</td></tr>
+        <tr><td class="mut">NLP</td><td>分类 / 情感 / 实体抽取 / 摘要 / 翻译 / 问答 / 生成</td><td>HuggingFace Transformers、PaddleNLP、Llama/Qwen/DeepSeek</td><td>GPT / 文心 / 通义 / 豆包</td></tr>
+        <tr><td class="mut">语音</td><td>ASR / TTS / 声纹 / 唤醒</td><td>Whisper、PaddleSpeech、Coqui TTS、Edge TTS</td><td>讯飞 / 百度 / 阿里语音</td></tr>
+        <tr><td class="mut">多模态</td><td>图文理解 / 文生图 / 图生图 / 视频生成</td><td>Stable Diffusion、LLaVA、Qwen-VL、PaddleMIX</td><td>DALL·E3、Midjourney、文心一格</td></tr>
+      </table>
+      <p class="note">对应用开发者，每个方向走「<b>读通用认知 → 用现成开源工具跑通 demo → 接进自己的 API</b>」三步即可，不必逐层推导算法。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">5.4</span> 实战任务（聚焦能落地的四个方向）</h3>
+      <div class="task"><span class="lbl">任务 1 · 目标检测</span><p>用 Ultralytics YOLO 训练/调用一个检测模型，识别图片中的物体并可视化框出。</p></div>
+      <div class="task"><span class="lbl">任务 2 · 中文 NLP</span><p>用 HuggingFace + 一个中文模型做文本分类或情感分析，封装成 FastAPI 接口。</p></div>
+      <div class="task"><span class="lbl">任务 3 · 语音识别</span><p>用 Whisper 把一段音频转文字，跑通 ASR 完整流程。</p></div>
+      <div class="task"><span class="lbl">任务 4 · 图文理解</span><p>用 Qwen-VL / LLaVA 做一个「图片问答」小工具。</p></div>
+      <div class="task"><span class="lbl">任务 5 · 进阶理论（可选）</span><p>《动手学深度学习》补原理，深化你的 Transformer 理解。</p></div>
+      <p class="note" style="margin-top:10px">📺 视频指引：<a href="https://search.bilibili.com/all?keyword=%E6%9D%8E%E6%B2%90%20%E5%8A%A8%E6%89%8B%E5%AD%A6%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0" target="_blank">李沐·动手学深度学习</a>　<a href="https://search.bilibili.com/all?keyword=%E5%90%8C%E6%B5%8E%E5%AD%90%E8%B1%AA%E5%85%84%20YOLO" target="_blank">同济子豪兄·YOLO/CV实战</a>　<a href="https://search.bilibili.com/all?keyword=%E9%A3%9E%E6%A1%A8%20PaddleOCR%20%E6%95%99%E7%A8%8B" target="_blank">飞桨 PaddleOCR 教程</a></p>
+    </div>
+    <blockquote>✅ 阶段目标：四大能力领域至少各能跑通一个「现成模型 → 接口」的完整 demo。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 6 大模型应用 ================= -->
+<section class="phase" id="s6" data-phase="6">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">6</span>
+    <div class="phase-title">
+      <h2>大模型应用开发（当前最热）</h2>
+      <div class="goal">把大模型 + 你的代码，做成真正能用的业务系统：RAG、Agent、工作流</div>
+    </div>
+    <span class="phase-duration">约 6–8 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="6"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">6.1</span> 大模型应用框架与架构</h3>
+      <div class="skill-pills">
+        <span class="pill hot">RAG 检索增强</span><span class="pill hot">Agent 智能体</span>
+        <span class="pill">LangChain</span><span class="pill">LlamaIndex</span><span class="pill">Dify</span>
+        <span class="pill on">Prompt 工程</span><span class="pill on">OpenAI API</span><span class="pill">LangGraph</span>
+      </div>
+      <p>这是你整个学习方向里<b>最值得投入</b>的板块，也是当前就业/项目蓝海，三条主线：</p>
+      <ul>
+        <li><b>RAG（检索增强生成）</b>：私有知识库 → 向量化 → 检索 → 喂给大模型，解决幻觉与私有数据问题。</li>
+        <li><b>Agent（智能体）</b>：大模型 + 工具调用，让它自动规划步骤、执行任务。</li>
+        <li><b>AI 工作流</b>：串联多个 AI 能力，如「上传合同 → OCR → 大模型提取 → 入库」。</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">6.2</span> 学习清单</h3>
+      <div class="learn-list" data-phase-list="6">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Prompt 工程<span class="li-tag key">必学</span></span><span class="li-desc">提示词设计、Few-shot、输出结构化（JSON）</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">模型 API 调用与切模型</span><span class="li-desc">统一 OpenAI 格式，封装可切换任意模型的客户端</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">RAG 全流程<span class="li-tag hot">必学</span></span><span class="li-desc">文档切分 → Embedding → 向量存储 → 检索 → 组装回答</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">LangChain 框架</span><span class="li-desc">链式调用、Agent 工具调用、记忆；生态最大</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">LlamaIndex 专精 RAG</span><span class="li-desc">私有知识库文档问答的专用框架</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Agent 智能体开发<span class="li-tag hot">当前最热</span></span><span class="li-desc">工具调用、规划、执行循环；LangGraph 编排多步 Agent</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">低代码平台 Dify / FastGPT</span><span class="li-desc">可视化搭 RAG / Agent / 工作流，快速原型</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">本地模型部署（可选）</span><span class="li-desc">Ollama 跑开源模型（Qwen/DeepSeek），免费离线</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">API Key 安全与费用控制<span class="li-tag key">必学</span></span><span class="li-desc">用 .env 环境变量存密钥、绝不提交进 Git 仓库、给 key 设用量上限——否则会被盗刷</span></span></label>
+      </div>
+      <p class="note" style="margin-top:10px">📺 视频指引：<a href="https://search.bilibili.com/all?keyword=LangChain%20RAG%20%E5%AE%9E%E6%88%98" target="_blank">LangChain RAG 实战</a>　<a href="https://search.bilibili.com/all?keyword=Dify%20%E6%95%99%E7%A8%8B" target="_blank">Dify 教程</a>　<a href="https://search.bilibili.com/all?keyword=Ollama%20%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2" target="_blank">Ollama 本地部署</a></p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">6.3</span> 实战任务</h3>
+      <div class="task"><span class="lbl">任务 1 · 私人知识库问答（RAG 毕设级）</span><p>把一批文档（如你的学习笔记）向量化，做一个能「基于文档回答」的网页问答系统，展示引用来源。</p></div>
+      <div class="task"><span class="lbl">任务 2 · 智能体</span><p>用 LangChain/LangGraph 做一个能「查天气 + 查日历 + 发提醒」的 Agent，让它自己调用工具完成请求。</p></div>
+      <div class="task"><span class="lbl">任务 3 · 文档处理工作流</span><p>实现「上传合同 → OCR 识别 → 大模型提取关键字段 → 写入数据库」的完整链路。</p></div>
+    </div>
+    <blockquote>✅ 阶段目标：能独立交付「RAG 知识问答」和「Agent」两类应用。这一阶段的作品就是求职/毕设的核心亮点。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 7 工程化与部署 ================= -->
+<section class="phase" id="s7" data-phase="7">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">7</span>
+    <div class="phase-title">
+      <h2>工程化与部署（Demo → 生产）</h2>
+      <div class="goal">把本地能跑的 Demo，变成全球都能访问、能扛并发、能上线的服务</div>
+    </div>
+    <span class="phase-duration">约 4–5 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="7"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">7.1</span> 工程化技术全景</h3>
+      <div class="skill-pills">
+        <span class="pill on">Docker</span><span class="pill on">Docker Compose</span>
+        <span class="pill">Kubernetes</span><span class="pill on">CI/CD</span>
+        <span class="pill">模型推理优化</span><span class="pill">Nginx</span><span class="pill hot">免费托管部署</span>
+      </div>
+      <p>这是从「Demo 到上线的分水岭」，也是你写给自己用的应用能否真正对外服务的关键。核心顺序：容器化 → 编排 → 上线 → 免费托管。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">7.2</span> 学习清单</h3>
+      <div class="learn-list" data-phase-list="7">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Docker 核心<span class="li-tag key">必学</span></span><span class="li-desc">镜像/容器、Dockerfile、常用命令，一次解决环境问题</span><br><span class="li-links"><a href="https://search.bilibili.com/all?keyword=%E9%81%87%E8%A7%81%E7%8B%82%E7%A5%9E%E8%AF%B4%20Docker" target="_blank">👨‍💻 B站搜索：遇见狂神说 Docker</a></span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Docker Compose 编排</span><span class="li-desc">一个 YAML 起「前后端 + AI 服务 + 数据库」</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Nginx 反向代理</span><span class="li-desc">静态资源、API 转发、HTTPS 证书配置</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">CI/CD 自动化</span><span class="li-desc">GitHub Actions 自动 build + test + deploy</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">Kubernetes 概念<span class="li-tag quick">了解</span></span><span class="li-desc">Pod/Service/Deployment 基础，知道即可，自用可后学</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">模型推理加速（可选）</span><span class="li-desc">ONNX Runtime / TensorRT / vLLM，量化 & 高并发推理</span></span></label>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">7.3</span> 实战任务</h3>
+      <div class="task"><span class="lbl">任务 1 · Docker 化你的后端</span><p>给之前 FastAPI 项目写 Dockerfile + docker-compose.yml，本地一条命令启动前后端和数据库。</p></div>
+      <div class="task"><span class="lbl">任务 2 · 部署上线</span><p>把项目部署到云服务器或免费托管平台，绑域名 + HTTPS，让手机能访问。</p></div>
+    </div>
+    <blockquote>✅ 阶段目标：能独立把任意项目容器化并部署到一个公网可访问的地址。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 阶段 8 综合实战 ================= -->
+<section class="phase" id="s8" data-phase="8">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">8</span>
+    <div class="phase-title">
+      <h2>综合实战 · 端到端完整项目</h2>
+      <div class="goal">把 1–7 阶段全部串起来，交付一个真实、可用、能展示的全栈 AI 应用</div>
+    </div>
+    <span class="phase-duration">约 4–6 周</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+    <div class="phase-progress">
+      <div class="track"><div class="fill" data-phase-prog="8"></div></div>
+      <span class="pct">0%</span>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">8.1</span> 一个立得住的毕设/作品集级项目</h3>
+      <p>推荐选题：<b>「智能文档问答助手」</b>——你所有所学都能用上：</p>
+      <ul>
+        <li><b>前端</b>：Vue/React 网页，支持上传文档、流式对话、结果展示</li>
+        <li><b>后端</b>：FastAPI，处理上传、鉴权、调用 AI</li>
+        <li><b>数据库</b>：MySQL 存用户/文档元数据 + 向量库存知识</li>
+        <li><b>AI</b>：OCR 识别（合同/图片）+ RAG 检索增强 + 大模型回答</li>
+        <li><b>工程化</b>：Docker Compose 一键构建</li>
+        <li><b>部署</b>：免费托管 + HTTPS，公网可访</li>
+      </ul>
+      <p class="note">这个项目同时覆盖你记忆里的「编程学习助手」方向，可直接当作毕设或求职作品打磨。</p>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">8.2</span> 交付验收清单（每个都勾完即达标）</h3>
+      <div class="learn-list" data-phase-list="8">
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">产品逻辑闭环</span><span class="li-desc">能注册登录、上传文档、提问、得到带来源的回答</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">代码工程规范</span><span class="li-desc">Git 仓库、README、环境变量管理、错误处理</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">测试与健壮性</span><span class="li-desc">关键接口有测试，异常输入不崩溃</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">性能可接受</span><span class="li-desc">首页秒开、查询响应合适，Redis 缓存热门数据</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">线上可访问</span><span class="li-desc">部署成功，手机打开能正常使用</span></span></label>
+        <label class="learn-item"><input type="checkbox"><span class="li-main"><span class="li-title">作品展示材料</span><span class="li-desc">录屏演示 + README + 架构图，可放进简历</span></span></label>
+      </div>
+    </div>
+    <blockquote>✅ 阶段目标：产出一个「能上线、能演示、能写进简历」的完整全栈 AI 应用。</blockquote>
+  </div>
+</section>
+
+<!-- ================= 免费部署指南 ================= -->
+<section class="phase open" id="deploy">
+  <div class="phase-head" onclick="togglePhase(this)">
+    <span class="phase-num">🚀</span>
+    <div class="phase-title">
+      <h2 style="font-weight:800;color:var(--brand)">把这份 HTML 免费部署到公网</h2>
+      <div class="goal">这份路线页是纯静态单文件，正好适合用免费托管平台发布，手机也能随时看</div>
+    </div>
+    <span class="phase-duration">5–15 分钟</span>
+    <span class="chev">▾</span>
+  </div>
+  <div class="phase-body">
+
+    <div class="block">
+      <h3><span class="n">3 选 1</span> 免费静态托管平台（都支持纯 HTML，永久免费）</h3>
+      <div class="host-grid">
+        <div class="host recommend">
+          <h4>GitHub Pages <span class="badge">推荐 · 稳定</span></h4>
+          <p>适合有 GitHub 账号的你。域名 <code>你的用户名.github.io</code>，无限免费。</p>
+          <p class="limits">需先有 GitHub 账号（注册完全免费）</p>
+        </div>
+        <div class="host">
+          <h4>Netlify Drop</h4>
+          <p>最简单的方案：把 HTML 文件拖进网页就上线。</p>
+          <p class="limits">免费版每月 100GB 流量，个人够用</p>
+        </div>
+        <div class="host">
+          <h4>Vercel</h4>
+          <p>开发者口碑好，支持命令行一键部署，国内访问较快。</p>
+          <p class="limits">操作和 Netlify 类似，也很简单</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">方案 A</span> GitHub Pages（推荐，最稳定）</h3>
+      <div class="deploy-steps">
+        <div class="dp"><h4>把文件放进新的 GitHub 仓库</h4>
+          <p>登录 github.com → New repository → 命名如 <code>study-route</code>（设为 Public）→ 上传本机这个 HTML 文件，并重命名为 <code>index.html</code>。</p></div>
+        <div class="dp"><h4>开启 Pages</h4>
+          <p>仓库 Settings → Pages → Source 选 <b>Deploy from a branch</b> → 选 <code>main</code> 分支 + <code>/ (root)</code> → Save。</p></div>
+        <div class="dp"><h4>等 1–2 分钟，打开你的网址</h4>
+          <p>地址：<code>https://你的用户名.github.io/study-route/</code><br>
+          <span class="hint">第一次部署后会自动给你一个专属 URL。</span></p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">方案 B</span> Netlify Drop（最简单，拖拽即上线）</h3>
+      <div class="deploy-steps">
+        <div class="dp"><h4>打开 app.netlify.com/drop</h4>
+          <p>用邮箱或 GitHub 免费注册并登录 Netlify 账号。</p></div>
+        <div class="dp"><h4>把 HTML 拖进去</h4>
+          <p>拖入后自动生成一个 <code>https://随机名.netlify.app</code> 地址，立即访问；在站点设置里可改个好记的子域名。</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3><span class="n">小提示</span> 让部署更专业</h3>
+      <ul>
+        <li>把文件改名为 <code>index.html</code> 后，访问根路径更干净（无需写文件名）。</li>
+        <li>想绑定自己的域名？GitHub Pages / Netlify 都支持在设置里绑一个你买的域名（域名这一步才收费）。</li>
+        <li>这个文档不含任何后端，纯静态，三个平台都能直接托。</li>
+      </ul>
+    </div>
+
+    <blockquote>✅ 部署完成：以后用手机或任何设备打开那个网址就能随时查看学习路线。注意：勾选进度存在各设备浏览器本地，不跨设备同步。</blockquote>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* Phase 交互 */
+function togglePhase(head){
+  head.closest('section.phase').classList.toggle('open');
+}
+/* ===== 进度持久化（localStorage，存在本设备浏览器中） ===== */
+const LS_KEY='airoadmap.progress.v1';
+function loadProgress(){
+  try{return JSON.parse(localStorage.getItem(LS_KEY))||{};}catch(e){return{};}
+}
+function saveProgress(){
+  const data={};
+  document.querySelectorAll('.learn-item input[type=checkbox]').forEach(b=>{
+    if(b.checked&&b.dataset.pid)data[b.dataset.pid]=true;
+  });
+  try{localStorage.setItem(LS_KEY,JSON.stringify(data));}catch(e){}
+}
+function assignIds(){
+  /* 给每个勾选项一个稳定 id：阶段号-序号 */
+  document.querySelectorAll('[data-phase-list]').forEach(list=>{
+    const ph=list.dataset.phaseList;
+    list.querySelectorAll('input[type=checkbox]').forEach((b,i)=>{
+      b.dataset.pid=ph+'-'+(i+1);
+    });
+  });
+}
+function restoreProgress(){
+  const data=loadProgress();
+  document.querySelectorAll('.learn-item input[type=checkbox]').forEach(b=>{
+    if(b.dataset.pid&&data[b.dataset.pid]){
+      b.checked=true;
+      b.closest('.learn-item').classList.add('checked');
+    }
+  });
+}
+/* ===== 进度统计 ===== */
+function computePhase(el){
+  const list=el.querySelector('[data-phase-list]');
+  if(!list)return [0,0];
+  const boxes=list.querySelectorAll('input[type=checkbox]');
+  let done=0;boxes.forEach(b=>{if(b.checked)done++});
+  return [done,boxes.length];
+}
+function refreshPhase(sec){
+  const r=computePhase(sec);
+  const fill=sec.querySelector('.fill[data-phase-prog]');
+  const pct=sec.querySelector('.pct');
+  if(!fill||!pct)return;
+  const p=r[1]?Math.round(r[0]/r[1]*100):0;
+  fill.style.width=p+'%';
+  pct.textContent=p+'%';
+}
+function refreshOverall(){
+  let total=0,done=0;
+  document.querySelectorAll('[data-phase-list]').forEach(list=>{
+    list.querySelectorAll('input[type=checkbox]').forEach(b=>{
+      total++;if(b.checked)done++;
+    });
+  });
+  const p=total?Math.round(done/total*100):0;
+  document.getElementById('overall-pct').textContent=p+'%';
+  document.getElementById('overall-count').textContent=done+'/'+total;
+}
+function refreshAll(){
+  document.querySelectorAll('section.phase').forEach(refreshPhase);
+  refreshOverall();
+}
+function resetAll(){
+  if(!confirm('确定要清空所有学习进度吗？'))return;
+  document.querySelectorAll('.learn-item input[type=checkbox]').forEach(b=>{
+    b.checked=false;
+    b.closest('.learn-item').classList.remove('checked');
+  });
+  try{localStorage.removeItem(LS_KEY);}catch(e){}
+  refreshAll();
+}
+/* ===== 初始化 ===== */
+assignIds();
+restoreProgress();
+document.querySelectorAll('[data-phase-list]').forEach(list=>{
+  list.addEventListener('change',e=>{
+    const item=e.target.closest('.learn-item');
+    if(item)item.classList.toggle('checked',e.target.checked);
+    saveProgress();
+    refreshAll();
+  });
+});
+refreshAll();
+</script>
+</body>
+</html>
