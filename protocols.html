@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AI 开发必知的五类协议 · 修订版</title>
+<style>
+:root{
+  --bg:#05070f;--surface:#0e1424;--surface-2:#151d33;
+  --border:rgba(120,170,255,.16);--border-strong:rgba(120,190,255,.38);
+  --text-1:#eaf2ff;--text-2:#a8b8d4;--text-3:#6c7f9f;
+  --accent:#22d3ee;--accent-2:#a855f7;--accent-3:#3b82f6;
+  --good:#34d399;--warn:#fbbf24;--bad:#fb7185;
+  --grad:linear-gradient(135deg,#22d3ee,#3b82f6 52%,#a855f7);
+  --radius:16px;
+  --font:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,"Courier New",monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;scroll-padding-top:74px}
+body{
+  margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font);
+  font-size:16.5px;line-height:1.75;
+  background-image:
+    radial-gradient(ellipse at 10% 0%,rgba(34,211,238,.13),transparent 55%),
+    radial-gradient(ellipse at 92% 12%,rgba(168,85,247,.12),transparent 55%);
+  background-attachment:fixed;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+img{max-width:100%}
+
+/* ---------- 顶部进度条 ---------- */
+#progress{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.06);z-index:60}
+#progress i{display:block;height:100%;width:0;background:var(--grad)}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;
+  padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));
+  background:rgba(5,7,15,.82);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.topbar .brand{font-size:13.5px;font-weight:600;color:var(--text-2);letter-spacing:.02em;flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .brand b{color:var(--accent)}
+.btn{
+  appearance:none;border:1px solid var(--border-strong);background:rgba(255,255,255,.04);
+  color:var(--text-1);font-family:var(--font);font-size:13.5px;font-weight:600;
+  padding:8px 14px;border-radius:999px;cursor:pointer;line-height:1.4;
+}
+.btn:active{background:rgba(34,211,238,.18)}
+
+/* ---------- 目录抽屉 ---------- */
+.toc{
+  position:fixed;inset:0;z-index:70;display:none;
+  background:rgba(3,5,12,.96);backdrop-filter:blur(20px);
+  padding:calc(70px + env(safe-area-inset-top)) 18px 40px;overflow:auto;
+}
+.toc.open{display:block}
+.toc h4{margin:0 0 14px;font-size:12px;letter-spacing:.16em;color:var(--text-3);text-transform:uppercase}
+.toc a{
+  display:block;text-decoration:none;color:var(--text-1);font-size:17px;font-weight:600;
+  padding:13px 14px;margin-bottom:8px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+}
+.toc a span{display:block;font-size:12.5px;font-weight:400;color:var(--text-3);margin-top:2px}
+.toc a:active{background:var(--surface-2);border-color:var(--accent)}
+
+/* ---------- 布局 ---------- */
+main{max-width:780px;margin:0 auto;padding:0 16px 60px}
+section{padding:38px 0 6px;border-top:1px solid rgba(120,170,255,.10)}
+section:first-of-type{border-top:none}
+
+.kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px;font-weight:700}
+h1{font-size:34px;line-height:1.25;margin:0 0 12px;letter-spacing:-.02em}
+h2{font-size:24px;line-height:1.35;margin:0 0 10px;letter-spacing:-.01em}
+h3{font-size:17.5px;margin:0 0 6px;line-height:1.45}
+h4{font-size:15px;margin:0 0 4px}
+p{margin:0 0 12px;color:var(--text-2)}
+.lede{font-size:16.5px;color:var(--text-2);margin-bottom:18px}
+b,strong{color:var(--text-1);font-weight:700}
+.dim{color:var(--text-3)}
+.g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- 封面 ---------- */
+.cover{padding-top:46px;text-align:left}
+.cover h1{font-size:40px}
+.cover .sub{font-size:16.5px;color:var(--text-2);max-width:34em}
+.badge{
+  display:inline-block;font-size:12px;font-weight:700;letter-spacing:.06em;
+  padding:6px 12px;border-radius:999px;border:1px solid var(--border-strong);
+  color:var(--accent);background:rgba(34,211,238,.08);margin-bottom:18px;
+}
+.toclist{list-style:none;padding:0;margin:22px 0 0}
+.toclist li{margin-bottom:10px}
+.toclist a{
+  display:flex;gap:12px;align-items:flex-start;text-decoration:none;
+  padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--border);
+}
+.toclist a:active{border-color:var(--accent);background:var(--surface-2)}
+.toclist .n{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:700;flex:0 0 auto;padding-top:2px}
+.toclist .t{font-size:16px;font-weight:700;color:var(--text-1);line-height:1.45}
+.toclist .d{font-size:13.5px;color:var(--text-3);line-height:1.55;margin-top:2px}
+
+/* ---------- 卡片 ---------- */
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px 16px 14px;margin:0 0 12px;
+}
+.card.accent{border-top:3px solid var(--accent)}
+.card h3{color:var(--text-1)}
+.card p:last-child{margin-bottom:0}
+.card .ic{font-size:20px;line-height:1;display:block;margin-bottom:6px}
+.tagline{font-family:var(--mono);font-size:12.5px;color:var(--text-3);margin-top:8px;word-break:break-word}
+
+.note{
+  background:linear-gradient(135deg,rgba(34,211,238,.09),rgba(168,85,247,.08));
+  border:1px solid var(--border-strong);border-left:3px solid var(--accent);
+  border-radius:12px;padding:13px 15px;margin:16px 0;
+}
+.note .tag{
+  display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.08em;
+  color:var(--accent);background:rgba(34,211,238,.12);border-radius:999px;padding:3px 10px;margin-bottom:7px;
+}
+.note p{margin:0;color:var(--text-2);font-size:15px;line-height:1.7}
+.note.warn{border-left-color:var(--warn);background:linear-gradient(135deg,rgba(251,191,36,.09),rgba(251,113,133,.06))}
+.note.warn .tag{color:var(--warn);background:rgba(251,191,36,.13)}
+
+/* ---------- 列表 ---------- */
+ul{margin:0 0 12px;padding-left:20px}
+li{margin-bottom:7px;color:var(--text-2);font-size:15.5px;line-height:1.7}
+li::marker{color:var(--accent)}
+ul.compact li{font-size:14.5px;margin-bottom:5px}
+
+/* ---------- 代码块 ---------- */
+.wire{
+  background:#03060f;border:1px solid var(--border);border-radius:12px;
+  padding:12px 13px;font-family:var(--mono);font-size:12.8px;line-height:1.75;
+  color:var(--text-2);overflow-x:auto;white-space:pre;margin:12px 0;-webkit-overflow-scrolling:touch;
+}
+.wire b{color:var(--accent);font-weight:700}
+.wire i{color:var(--good);font-style:normal}
+.wire s{color:var(--text-3);text-decoration:none}
+.wire u{color:var(--accent-2);text-decoration:none}
+code{font-family:var(--mono);font-size:.88em;background:rgba(120,170,255,.1);
+  padding:2px 6px;border-radius:6px;color:var(--accent);word-break:break-word}
+
+/* ---------- 分层堆叠 ---------- */
+.tier{margin-bottom:6px;border:1px solid var(--border);border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(21,29,51,.65),rgba(14,20,36,.65));overflow:hidden}
+.tier > .hd{
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  padding:11px 14px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.025);
+}
+.tier > .hd strong{font-size:15px;color:var(--text-1)}
+.tier > .hd em{font-style:normal;font-size:12.5px;color:var(--text-3)}
+.tier > .items{display:grid;grid-template-columns:1fr;gap:1px;background:var(--border)}
+@media(min-width:620px){.tier > .items{grid-template-columns:repeat(var(--cols,2),1fr)}}
+.item{background:var(--surface);padding:11px 13px}
+.item .n{font-size:14.5px;font-weight:700;color:var(--text-1);display:block}
+.item .d{font-size:13px;color:var(--text-3);line-height:1.6;display:block;margin-top:2px}
+.item.hi{background:linear-gradient(135deg,rgba(34,211,238,.10),rgba(14,20,36,.4))}
+.item.hi .n{color:var(--accent)}
+.arrow{text-align:center;color:var(--accent);font-size:13px;letter-spacing:.2em;padding:7px 0;opacity:.75}
+
+/* ---------- 对照（勘误） ---------- */
+.err{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;background:var(--surface)}
+.err .h{display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.025)}
+.err .h .lbl{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--accent);
+  background:rgba(34,211,238,.12);padding:2px 8px;border-radius:6px}
+.err .h .ttl{font-size:14.5px;font-weight:700}
+.err .b{padding:12px 14px}
+.err .b .row{margin-bottom:10px}
+.err .b .row:last-child{margin-bottom:0}
+.err .b .k{font-size:11.5px;letter-spacing:.08em;color:var(--text-3);margin-bottom:3px;font-weight:700}
+.err .b .v{font-size:14.5px;line-height:1.65;color:var(--text-2)}
+.err .old .v{color:#a9b6c9;text-decoration:line-through;text-decoration-color:rgba(251,113,133,.6)}
+.err .fix .v{color:var(--text-1)}
+.err .fix .k{color:var(--good)}
+
+/* ---------- 选型 ---------- */
+.choice{display:grid;gap:8px;margin:10px 0 0}
+.choice .r{display:grid;gap:3px;padding:11px 13px;border-radius:12px;background:var(--surface);border:1px solid var(--border)}
+.choice .need{font-size:13.5px;color:var(--text-3)}
+.choice .pick{font-size:15px;color:var(--text-1);font-weight:700}
+.choice .pick em{font-style:normal;font-weight:400;font-size:13.5px;color:var(--text-3)}
+
+/* ---------- 收尾 ---------- */
+.end{text-align:center;padding:48px 0 20px}
+.end .big{font-size:32px;font-weight:800;margin-bottom:12px}
+.takeaway{display:grid;gap:10px;margin:18px 0}
+.takeaway .t{padding:14px;border-radius:14px;border:1px solid var(--border);background:var(--surface)}
+.takeaway .t .k{font-size:13px;color:var(--accent);font-weight:700;letter-spacing:.04em;margin-bottom:4px}
+.takeaway .t .v{font-size:15px;color:var(--text-2);line-height:1.7}
+.foot{text-align:center;color:var(--text-3);font-size:13px;padding:26px 0 10px}
+
+@media(min-width:700px){
+  body{font-size:17px}
+  h1{font-size:42px}
+  h2{font-size:27px}
+  .cover h1{font-size:46px}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .duo > *{margin-bottom:0}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"><i></i></div>
+
+<header class="topbar">
+  <div class="brand">协议知识地图 · <b>修订版</b></div>
+  <button class="btn" id="tocBtn">目录</button>
+</header>
+
+<nav class="toc" id="toc">
+  <h4>目录 · 点击跳转</h4>
+  <a href="#cover">封面 · 这份讲义讲什么<span>为什么原图需要修订</span></a>
+  <a href="#three">01 · 协议的三要素<span>语法 / 语义 / 时序</span></a>
+  <a href="#layers">02 · 协议分层：叠加而非并列<span>四层地图</span></a>
+  <a href="#httpws">03 · HTTP 与 WebSocket<span>一次性 vs 持续性</span></a>
+  <a href="#sse">04 · SSE：单向流式<span>机制与层次澄清</span></a>
+  <a href="#rpc">05 · JSON-RPC / gRPC<span>让接口标准化</span></a>
+  <a href="#mcp">06 · MCP：AI 接入标准<span>三原语与架构</span></a>
+  <a href="#map">07 · 全景与选型<span>按需求选协议</span></a>
+  <a href="#errata">08 · 勘误对照表<span>六处需要改的地方</span></a>
+  <a href="#end">09 · 收束<span>记住这三句话</span></a>
+</nav>
+
+<main>
+
+<!-- ============ 封面 ============ -->
+<section id="cover" class="cover">
+  <div class="badge">AI 开发必修 · 2026</div>
+  <h1>AI 开发必知的<br><span class="g">五类协议</span></h1>
+  <p class="sub">从「双方约定」出发，逐层拆开 TCP / HTTP / WebSocket / SSE / JSON-RPC / gRPC / MCP 的真实关系，并修正原图中的层次错位与关键缺失。</p>
+
+  <ul class="toclist">
+    <li><a href="#three"><div class="n">01</div><div><div class="t">协议 = 双方的约定</div><div class="d">语法、语义、时序，三者缺一不可。</div></div></a></li>
+    <li><a href="#layers"><div class="n">02</div><div><div class="t">协议是叠加，不是并列</div><div class="d">gRPC = Protobuf + HTTP/2 + 调用约定。</div></div></a></li>
+    <li><a href="#httpws"><div class="n">03</div><div><div class="t">HTTP 与 WebSocket</div><div class="d">握手、帧、心跳、重连，逐项对齐。</div></div></a></li>
+    <li><a href="#sse"><div class="n">04</div><div><div class="t">SSE 与 JSON-RPC / gRPC</div><div class="d">流式传输方式 vs 调用约定标准。</div></div></a></li>
+    <li><a href="#mcp"><div class="n">05</div><div><div class="t">MCP 与全景收束</div><div class="d">三原语、一对一连接、承载方式，最后一张勘误表收尾。</div></div></a></li>
+  </ul>
+
+  <div class="note">
+    <div class="tag">为什么会有这份修订版</div>
+    <p>原图五张卡片覆盖了协议栈的骨架，但有 <b>3 处层次错位</b> 和 <b>3 处关键机制缺失</b>。照原图理解，写代码时会在「为什么 SSE 和 RAG 并列」「MCP 到底能不能跑在云上」这类地方绕弯路。最后一章的勘误表是完整修改清单。</p>
+  </div>
+</section>
+
+<!-- ============ 01 三要素 ============ -->
+<section id="three">
+  <p class="kicker">Part 01 · 协议基础</p>
+  <h2>协议 = 语法 + 语义 + 时序</h2>
+  <p class="lede">协议不是「一句话约定」，而是一份<b>双方都要实现</b>的规则集。少对齐任何一项，通信都会出问题。</p>
+
+  <div class="card accent">
+    <span class="ic">📐</span>
+    <h3>语法 · Syntax</h3>
+    <p>消息长什么样：字段名、类型、编码方式、字节序。</p>
+    <div class="wire">{"jsonrpc": <i>"2.0"</i>,
+ <b>"method"</b>: <i>"search"</i>,
+ <b>"id"</b>: 1}</div>
+  </div>
+
+  <div class="card accent">
+    <span class="ic">🧠</span>
+    <h3>语义 · Semantics</h3>
+    <p>每个取值代表什么：状态码含义、错误码归类、字段的约束条件。</p>
+    <div class="wire">-32601 = <b>方法不存在</b>
+-32602 = <b>参数非法</b>
+200 + errBody = <s>语义错位</s></div>
+  </div>
+
+  <div class="card accent">
+    <span class="ic">⏱️</span>
+    <h3>时序 · Timing</h3>
+    <p>谁先谁后：请求顺序、超时时长、重试次数、并发与背压。</p>
+    <div class="wire">connect → <b>handshake</b>
+→ request → <b>stream</b>
+timeout <b>30s</b> / retry <b>×2</b></div>
+  </div>
+
+  <div class="note warn">
+    <div class="tag">最容易踩的坑</div>
+    <p><b>语法对齐 ≠ 通信正确。</b>两边字段名一模一样，但错误码含义不同、或者 200 里面装着错误内容——这类「静默失败」比直接报错难查十倍。对接时先对齐语义表，再对齐字段表。</p>
+  </div>
+</section>
+
+<!-- ============ 02 分层 ============ -->
+<section id="layers">
+  <p class="kicker">Part 01 · 分层关系</p>
+  <h2>它们是叠加承载，不是三层并列</h2>
+  <p class="lede">原图把 JSON-RPC/gRPC、HTTP/WebSocket、TCP 画成并列的三层，实际关系是<b>上层建立在下层之上</b>。</p>
+
+  <div class="tier">
+    <div class="hd"><strong>应用语义层</strong><em>调什么方法、传什么参数</em></div>
+    <div class="items" style="--cols:2">
+      <div class="item hi"><span class="n">🔧 JSON-RPC 2.0</span><span class="d">纯调用约定，不绑定传输 · method / params / id</span></div>
+      <div class="item hi"><span class="n">🧬 gRPC</span><span class="d">调用约定 + 序列化 + 传输三合一 · .proto → stub</span></div>
+      <div class="item"><span class="n">🌐 REST / OpenAPI</span><span class="d">资源导向，契约靠描述文件 · GET / POST / 204</span></div>
+      <div class="item"><span class="n">🧰 MCP</span><span class="d">面向 AI 的调用约定 · tools / resources / prompts</span></div>
+    </div>
+  </div>
+  <div class="arrow">▼ ▼ ▼</div>
+
+  <div class="tier">
+    <div class="hd"><strong>序列化层</strong><em>消息如何变成字节</em></div>
+    <div class="items" style="--cols:3">
+      <div class="item"><span class="n">📦 JSON</span><span class="d">人可读、自描述，体积大</span></div>
+      <div class="item"><span class="n">📐 Protocol Buffers</span><span class="d">schema 驱动，二进制紧凑</span></div>
+      <div class="item"><span class="n">✍️ Text / SSE 帧</span><span class="d">行分隔的文本事件流</span></div>
+    </div>
+  </div>
+  <div class="arrow">▼ ▼ ▼</div>
+
+  <div class="tier">
+    <div class="hd"><strong>传输层</strong><em>字节如何在网络上流动</em></div>
+    <div class="items" style="--cols:3">
+      <div class="item"><span class="n">🚌 HTTP / HTTP2</span><span class="d">请求响应语义 + 头部压缩 + 多路复用</span></div>
+      <div class="item"><span class="n">🔌 WebSocket</span><span class="d">HTTP 升级后转独立帧协议，全双工</span></div>
+      <div class="item"><span class="n">📡 SSE</span><span class="d">HTTP 响应体内持续推事件，单向</span></div>
+    </div>
+  </div>
+  <div class="arrow">▼ ▼ ▼</div>
+
+  <div class="tier">
+    <div class="hd"><strong>网络层</strong><em>字节如何抵达对端</em></div>
+    <div class="items" style="--cols:2">
+      <div class="item"><span class="n">🧱 TCP</span><span class="d">可靠有序字节流，面向连接；WebSocket / HTTP / SSE 最终都跑在它上面</span></div>
+      <div class="item"><span class="n">💨 UDP</span><span class="d">无连接、不保证到达；QUIC 在其上补齐可靠性与多路复用</span></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="tag">关键修正</div>
+    <p><b>gRPC 不是独立的一层</b>：它 = Protobuf 序列化 + HTTP/2 传输 + gRPC 调用约定。<b>JSON-RPC 是传输无关的规范</b>，实际多跑在 HTTP 或 WebSocket 上。<b>WebSocket 也不是应用层协议</b>——它是 HTTP 升级而来的传输层协议。</p>
+  </div>
+</section>
+
+<!-- ============ 03 HTTP vs WebSocket ============ -->
+<section id="httpws">
+  <p class="kicker">Part 02 · 传输层</p>
+  <h2>HTTP 与 WebSocket：一次性 vs 持续性</h2>
+
+  <div class="duo">
+    <div class="card accent" style="border-top-color:var(--accent-3)">
+      <h3>📨 HTTP / HTTP2</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">请求 → 响应，一问一答</p>
+      <ul class="compact">
+        <li><b>无状态</b>：会话靠 Header / Cookie 维持，不在连接里</li>
+        <li><b>连接复用</b>：HTTP/1.1 keep-alive；HTTP/2 多路复用 + HPACK 头部压缩 + 二进制帧</li>
+        <li><b>流式响应</b>：HTTP/1.1 用 chunked 编码，HTTP/2 用 DATA 帧</li>
+        <li><b>服务端推送已弃用</b>（HTTP/2 Server Push），推流改用 SSE 或 WebSocket</li>
+        <li>生态成熟：网关、缓存、鉴权、限流全都现成</li>
+      </ul>
+    </div>
+
+    <div class="card accent" style="border-top-color:var(--accent-2)">
+      <h3>🔗 WebSocket</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">握手后转独立帧协议，全双工</p>
+      <ul class="compact">
+        <li><b>握手</b>：<code>GET /ws + Upgrade: websocket + Sec-WebSocket-Key</code> → <b>101 Switching Protocols</b></li>
+        <li><b>帧结构</b>：FIN / RSV / opcode（text·binary·close·ping·pong）/ mask / payload length——不再是 HTTP 报文</li>
+        <li><b>心跳</b>：ping / pong 帧探测半开连接，穿越 NAT 与代理超时的必备机制</li>
+        <li><b>断线重连</b>：协议不提供，须自行实现指数退避 + 会话续传</li>
+        <li>典型场景：IM、协同编辑、实时语音、行情推送</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="tag">怎么选</div>
+    <p>只要「服务端单方面推给客户端」，用 <b>SSE</b> 更轻——它就是普通 HTTP，不需要额外握手和心跳；需要<b>双向实时</b>（客户端也要高频上行）才上 WebSocket。HTTP 与 WebSocket 也能共存于同一服务，靠路径区分。</p>
+  </div>
+</section>
+
+<!-- ============ 04 SSE ============ -->
+<section id="sse">
+  <p class="kicker">Part 02 · 流式传输</p>
+  <h2>SSE：把单向流塞进普通 HTTP</h2>
+
+  <div class="duo">
+    <div class="card accent">
+      <h3>📡 机制</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">Content-Type: text/event-stream</p>
+      <ul class="compact">
+        <li><b>服务端不关闭响应体</b>，持续追加事件帧；每帧以空行结束</li>
+        <li>可选字段：<code>data</code> / <code>event</code> / <code>id</code> / <code>retry</code></li>
+        <li>浏览器原生 <b>EventSource</b>：自动重连，并用 <b>Last-Event-ID</b> 续传，服务端可据此补发</li>
+        <li>局限：<b>单向</b>（上行需另开 HTTP）；HTTP/1.1 下同域并发连接约 6 条，需关代理缓冲（<code>X-Accel-Buffering: no</code>）</li>
+      </ul>
+      <div class="wire"><s>HTTP/1.1 200 OK</s>
+Content-Type: text/event-stream
+
+data: {"type":"token","v":"你"}
+
+data: {"type":"done"}
+
+</div>
+    </div>
+
+    <div class="card accent">
+      <h3>🔍 层次澄清（重要）</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">原图把 SSE 与「向量化 / 检索」画成了同一层的流水线</p>
+      <div class="choice">
+        <div class="r"><div class="need">应用模式</div><div class="pick" style="font-size:14.5px;font-weight:400;color:var(--text-2)"><b>RAG（向量化 / 检索 / 重排）</b>发生在<b>服务端内部</b>，是一次检索 + 一次生成的组合算法。</div></div>
+        <div class="r"><div class="need">传输方式</div><div class="pick" style="font-size:14.5px;font-weight:400;color:var(--text-2)"><b>SSE</b>只负责「把服务端产出的内容增量推给客户端」，它不关心内容从哪来。</div></div>
+        <div class="r"><div class="need">正确关系</div><div class="pick" style="font-size:14.5px;font-weight:400;color:var(--text-2)">RAG 在服务端算完 → 结果通过 SSE 推给前端。二者是<b>上下层</b>，不是并列步骤。</div></div>
+        <div class="r"><div class="need">工程现实</div><div class="pick" style="font-size:14.5px;font-weight:400;color:var(--text-2)">OpenAI / Anthropic 的流式 chat completion 接口用的就是 SSE；工具调用回合同样是 SSE 上的一段 JSON。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="tag">对比</div>
+    <p>轮询：反复建请求，浪费且延迟高；长轮询：服务端挂起连接，仍需自己重连；<b>SSE：纯 HTTP 语义 + 浏览器自带重连</b>，是 AI 流式输出的事实标准。</p>
+  </div>
+</section>
+
+<!-- ============ 05 JSON-RPC / gRPC ============ -->
+<section id="rpc">
+  <p class="kicker">Part 02 · 调用约定</p>
+  <h2>JSON-RPC / gRPC：让接口不再靠口口相传</h2>
+
+  <div class="duo">
+    <div class="card accent">
+      <h3>🧬 JSON-RPC 2.0</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">规范本身与传输无关，最常跑在 HTTP 或 WebSocket 上</p>
+      <div class="wire"><s>// 请求</s>
+{"jsonrpc": <i>"2.0"</i>, "method": <i>"search_docs"</i>,
+ "params": {"q": <i>"向量检索"</i>}, "id": 1}
+
+<s>// 成功响应</s>
+{"jsonrpc": <i>"2.0"</i>, "result": {"hits": 3}, "id": 1}
+
+<s>// 错误响应</s>
+{"jsonrpc": <i>"2.0"</i>,
+ "error": {"code": <b>-32601</b>, "message": <i>"Method not found"</i>},
+ "id": 1}</div>
+      <ul class="compact" style="margin-top:12px">
+        <li><b>id</b> 关联请求与响应；<b>无 id 即 notification</b>，服务端不回复</li>
+        <li><b>批量请求</b>：传 JSON 数组，服务端返回结果数组</li>
+        <li>保留错误码：-32700 解析失败 / -32600 请求无效 / -32601 方法不存在 / -32602 参数非法 / -32603 内部错误</li>
+      </ul>
+    </div>
+
+    <div class="card accent">
+      <h3>🧱 gRPC</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">schema 先行，双端生成桩代码</p>
+      <ul class="compact">
+        <li><b>.proto</b> 定义 service / method / 消息类型 → <b>protoc</b> 生成各语言客户端与服务端代码，签名不可能漂移</li>
+        <li>Protobuf 二进制编码，体积小、解析快</li>
+        <li>跑在 <b>HTTP/2</b> 上，四种调用模式：<b>unary / server-streaming / client-streaming / bidirectional</b></li>
+        <li>代价：浏览器原生不支持，需 gRPC-Web 或代理；调试不如 JSON 直观</li>
+      </ul>
+      <div class="note warn" style="margin-bottom:0">
+        <div class="tag">措辞修正</div>
+        <p>原图说「像调本地一样」——准确说法是<b>「像调函数一样」</b>。它仍是远程调用：有序列化开销、有网络延迟、可能部分失败。因此必须配套<b>超时、幂等键、重试与熔断</b>。</p>
+      </div>
+      <div class="note" style="margin-bottom:0">
+        <div class="tag">和 MCP 的关系</div>
+        <p><b>MCP 用的正是 JSON-RPC 2.0</b>，只是换了承载方式（stdio / Streamable HTTP）。这两张原图之间的暗线就接在这里。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 MCP ============ -->
+<section id="mcp">
+  <p class="kicker">Part 03 · AI 应用层</p>
+  <h2>MCP：把「AI 接外部世界」标准化</h2>
+  <p class="lede">Anthropic 提出并开源，现由 Linux Foundation 旗下 <b>Agentic AI Foundation</b>（Anthropic、Block、OpenAI 共同发起）托管，走中立治理。</p>
+
+  <div class="card accent">
+    <span class="ic">🔧</span>
+    <h3>Tools</h3>
+    <p>模型可调用的<b>动作</b>，通常有副作用（写库、发消息、扣款）。执行前一般需用户确认。</p>
+    <div class="tagline">search · create · execute</div>
+  </div>
+
+  <div class="card accent">
+    <span class="ic">📚</span>
+    <h3>Resources</h3>
+    <p>可读取的<b>上下文数据</b>，通常只读，按 URI 寻址。模型据此「知道」有什么可查。</p>
+    <div class="tagline">file:// · db://schema</div>
+  </div>
+
+  <div class="card accent">
+    <span class="ic">💡</span>
+    <h3>Prompts</h3>
+    <p>用户<b>显式触发</b>的模板化工作流，不由模型自行决定使用。</p>
+    <div class="tagline">/code-review · /summarize</div>
+  </div>
+
+  <div class="duo">
+    <div class="card">
+      <h3>🧩 架构：Host / Client / Server</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">Host 为每个 Server 建立一个专属 Client，严格 1 : 1</p>
+      <ul class="compact">
+        <li><b>Host</b>：Claude Code、Claude Desktop、IDE 等 AI 应用，持有对话与权限</li>
+        <li><b>Client</b>：Host 内部的协议实现，一个 Client 只服务一个 Server</li>
+        <li><b>Server</b>：暴露 tools / resources / prompts 的独立程序</li>
+        <li><b>隐私边界</b>：Server 看不到完整对话，只看到本次请求——权限最小化的关键</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🔌 承载与定位</h3>
+      <p style="font-size:13.5px;color:var(--text-3);margin-bottom:10px">JSON-RPC 2.0 消息，两种标准传输</p>
+      <ul class="compact">
+        <li><b>stdio</b>：本地子进程，读写标准输入输出，本地工具零端口暴露</li>
+        <li><b>Streamable HTTP</b>：单一端点 POST，响应可为一个 JSON 对象或请求级 SSE 流</li>
+        <li><b>修正</b>：MCP <b>不等于「云服务接口」</b>——它与「云」无关，本地进程同样是 Server，stdio 才是本地场景的主力</li>
+        <li>价值在于<b>标准化与可发现</b>：同一份 Server 换个 Host 就能用</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 全景与选型 ============ -->
+<section id="map">
+  <p class="kicker">Part 03 · 全景收束</p>
+  <h2>一张图串起来，外加选型结论</h2>
+
+  <div class="tier">
+    <div class="hd"><strong>语义</strong><em>越往上越贴近「语义」</em></div>
+    <div class="items" style="--cols:2">
+      <div class="item hi"><span class="n">JSON-RPC</span></div>
+      <div class="item hi"><span class="n">gRPC</span></div>
+      <div class="item hi"><span class="n">MCP</span></div>
+      <div class="item"><span class="n">REST</span></div>
+    </div>
+  </div>
+  <div class="arrow">▼ ▼ ▼</div>
+  <div class="tier">
+    <div class="hd"><strong>序列化</strong></div>
+    <div class="items" style="--cols:3">
+      <div class="item"><span class="n">JSON</span></div>
+      <div class="item"><span class="n">Protobuf</span></div>
+      <div class="item"><span class="n">SSE 帧</span></div>
+    </div>
+  </div>
+  <div class="arrow">▼ ▼ ▼</div>
+  <div class="tier">
+    <div class="hd"><strong>传输</strong></div>
+    <div class="items" style="--cols:3">
+      <div class="item"><span class="n">HTTP / 2</span></div>
+      <div class="item"><span class="n">WebSocket</span></div>
+      <div class="item"><span class="n">SSE</span></div>
+    </div>
+  </div>
+  <div class="arrow">▼ ▼ ▼</div>
+  <div class="tier">
+    <div class="hd"><strong>网络</strong></div>
+    <div class="items" style="--cols:2">
+      <div class="item"><span class="n">TCP</span></div>
+      <div class="item"><span class="n">UDP / QUIC</span></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px">✅ 按需求选型</h3>
+  <div class="choice">
+    <div class="r"><div class="need">普通业务接口</div><div class="pick">REST + JSON / HTTP <em>· 生态最全，别过度设计</em></div></div>
+    <div class="r"><div class="need">内部服务、强 schema、跨语言</div><div class="pick">gRPC <em>· 性能与契约强，浏览器需 gRPC-Web</em></div></div>
+    <div class="r"><div class="need">AI 调用自己的后端能力</div><div class="pick">MCP <em>· 换 Host 不用重写，换业务不用改 Agent</em></div></div>
+    <div class="r"><div class="need">模型流式吐字</div><div class="pick">SSE <em>· 事实上标准，自带重连与续传</em></div></div>
+    <div class="r"><div class="need">双向实时（IM / 协同）</div><div class="pick">WebSocket <em>· 心跳与重连要自己实现</em></div></div>
+    <div class="r"><div class="need">对外开放第三方集成</div><div class="pick">REST <em>· MCP 是给 AI 用的，不是给人用的</em></div></div>
+  </div>
+
+  <div class="note">
+    <div class="tag">一句话</div>
+    <p>协议选型不是选「最强」的，是选<b>出问题最容易定位</b>的。层次清晰，排查才有落点。</p>
+  </div>
+</section>
+
+<!-- ============ 08 勘误 ============ -->
+<section id="errata">
+  <p class="kicker">Part 03 · 勘误</p>
+  <h2>原图 → 修订：六处需要改的地方</h2>
+
+  <div class="err">
+    <div class="h"><span class="lbl">图 1</span><span class="ttl">三层并列</span></div>
+    <div class="b">
+      <div class="row old"><div class="k">原图</div><div class="v">JSON-RPC / gRPC、HTTP / WebSocket、TCP 三层并列</div></div>
+      <div class="row"><div class="k">问题</div><div class="v">误当作同级替代关系</div></div>
+      <div class="row fix"><div class="k">修订</div><div class="v">叠加承载：<b>gRPC = Protobuf + HTTP/2 + gRPC 约定</b>；JSON-RPC 传输无关，多跑 HTTP / WebSocket；WebSocket 是传输层协议</div></div>
+    </div>
+  </div>
+
+  <div class="err">
+    <div class="h"><span class="lbl">图 1</span><span class="ttl">协议定义过宽</span></div>
+    <div class="b">
+      <div class="row old"><div class="k">原图</div><div class="v">「协议就是双方遵守同一套规则」</div></div>
+      <div class="row"><div class="k">问题</div><div class="v">定义过宽，没给拆解</div></div>
+      <div class="row fix"><div class="k">修订</div><div class="v">拆成<b>语法（长什么样）、语义（什么意思）、时序（谁先谁后）</b>三要素，缺一即无法互通</div></div>
+    </div>
+  </div>
+
+  <div class="err">
+    <div class="h"><span class="lbl">图 2</span><span class="ttl">WebSocket 缺关键机制</span></div>
+    <div class="b">
+      <div class="row old"><div class="k">原图</div><div class="v">WebSocket = 全双工 · 实时推送</div></div>
+      <div class="row"><div class="k">问题</div><div class="v">缺关键机制</div></div>
+      <div class="row fix"><div class="k">修订</div><div class="v">补：<b>101 升级握手、帧结构、ping/pong 心跳、断线重连与指数退避</b>；并指出 SSE 更适合单向推流</div></div>
+    </div>
+  </div>
+
+  <div class="err">
+    <div class="h"><span class="lbl">图 3</span><span class="ttl">措辞低估远程调用</span></div>
+    <div class="b">
+      <div class="row old"><div class="k">原图</div><div class="v">「像调本地一样」</div></div>
+      <div class="row"><div class="k">问题</div><div class="v">忽略远程调用特性</div></div>
+      <div class="row fix"><div class="k">修订</div><div class="v">应为<b>「像调函数一样」</b>：仍有序列化开销、网络延迟与部分失败，必须配超时、幂等键、重试与熔断</div></div>
+    </div>
+  </div>
+
+  <div class="err">
+    <div class="h"><span class="lbl">图 4</span><span class="ttl">层次错位</span></div>
+    <div class="b">
+      <div class="row old"><div class="k">原图</div><div class="v">SSE 与「向量化 / 检索」并列为流水线</div></div>
+      <div class="row"><div class="k">问题</div><div class="v">层次错位</div></div>
+      <div class="row fix"><div class="k">修订</div><div class="v"><b>SSE 是传输方式，RAG 是应用模式</b>：检索在服务端内部完成，产出结果再经 SSE 推送，二者上下层</div></div>
+    </div>
+  </div>
+
+  <div class="err">
+    <div class="h"><span class="lbl">图 5</span><span class="ttl">MCP 定位过窄、原语不全</span></div>
+    <div class="b">
+      <div class="row old"><div class="k">原图</div><div class="v">MCP = AI 时代的云服务接口；只讲 tool</div></div>
+      <div class="row"><div class="k">问题</div><div class="v">定位过窄、原语不全</div></div>
+      <div class="row fix"><div class="k">修订</div><div class="v">MCP 与「云」无关，<b>stdio 本地进程同样是 Server</b>；原语应为 <b>Tools / Resources / Prompts</b> 三类；补 Host-Client-Server 一对一架构与两种传输</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 收束 ============ -->
+<section id="end" class="end">
+  <div class="big">收束 · 记住这三句</div>
+  <div class="takeaway">
+    <div class="t"><div class="k">① 协议 = 语法 + 语义 + 时序</div><div class="v">字段对齐只是第一步，语义一致才是通信正确的前提。</div></div>
+    <div class="t"><div class="k">② 协议是叠加的，不是并列的</div><div class="v">gRPC 跑在 HTTP/2 上，JSON-RPC 跑在 HTTP/WS 上，MCP 跑在 JSON-RPC 上。一层层往上叠。</div></div>
+    <div class="t"><div class="k">③ 选型看需求，不看强弱</div><div class="v">单向推流 SSE，双向实时 WebSocket，AI 接工具 MCP，通用业务 REST。</div></div>
+  </div>
+  <p class="lede" style="text-align:center;margin-top:22px">协议是约定，分层是地图，出错时才知道该往哪一层找。剩下的问题，随时来问。</p>
+  <div class="foot">AI 知识导师 · 协议知识地图修订版</div>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var bar = document.querySelector('#progress i');
+  var toc = document.getElementById('toc');
+  var btn = document.getElementById('tocBtn');
+
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+    bar.style.width = Math.min(100, Math.max(0, p * 100)) + '%';
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  btn.addEventListener('click', function(){ toc.classList.toggle('open'); });
+  toc.addEventListener('click', function(e){
+    if(e.target.tagName === 'A') toc.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>
